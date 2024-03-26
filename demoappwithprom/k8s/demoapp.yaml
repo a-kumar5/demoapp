@@ -20,7 +20,7 @@ spec:
       containers:
         - name: demoapp
           image: connectayushkumar/demoapp:1
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
 ---

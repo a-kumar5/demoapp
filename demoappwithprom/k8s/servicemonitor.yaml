@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dms-service-monitor
+  namespace: monitoring
+spec:
+  endpoints:
+    - port: http-traffic
+      path: "/actuator/prometheus"
+  namespaceSelector:
+    matchNames:
+      - production
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: dms
