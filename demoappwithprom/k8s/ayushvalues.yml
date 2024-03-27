@@ -6,7 +6,7 @@ prometheus:
     routePrefix: /
 
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
@@ -52,7 +52,7 @@ grafana:
       root_url: "http://localhost/grafana"
       serve_from_sub_path: true
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     labels:
       k8s-app: grafana-dashboard

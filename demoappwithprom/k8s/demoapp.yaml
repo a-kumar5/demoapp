@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: demoapp
-          image: connectayushkumar/demoapp:1
-          imagePullPolicy: Never
+          image: connectayushkumar/demoapp:2
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 ---
