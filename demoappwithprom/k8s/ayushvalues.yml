@@ -2,31 +2,25 @@ prometheus:
   prometheusSpec:
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
+    externalUrl: ""
+    routePrefix: /
 
   ingress:
-    enabled: false
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    labels:
+      k8s-app: prometheus-dashboard
 
-    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
-
-    annotations: {}
-    labels: {}
-
-    ## Redirect ingress to an additional defined port on the service
-    # servicePort: 8081
-
-    ## Hostnames.
-    ## Must be provided if Ingress is enabled.
-    ##
-    # hosts:
-    #   - prometheus.domain.com
     hosts: []
+    # hosts:
+    #   - my.example.com
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+      - /prometheus(/|$)(.*)
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
@@ -36,6 +30,41 @@ prometheus:
     ## Secret must be manually created in the namespace
     ##
     tls: []
-      # - secretName: prometheus-general-tls
-      #   hosts:
-      #     - prometheus.example.com
+    # tls:
+    #   - secretName: app-certificate-secret
+    #     hosts:
+    #       - my.example.com
+
+  ## Settings affecting prometheusSpec
+  ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
+  ##
+
+grafana:
+  defaultDashboardsTimezone: utc
+
+  ## TODO: Use an existing secret
+  ## https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml#L335-L344
+  ##
+  adminPassword: ayush123
+  grafana.ini:
+    server:
+      domain: localhost
+      root_url: "http://localhost/grafana"
+      serve_from_sub_path: true
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    labels:
+      k8s-app: grafana-dashboard
+    hosts:
+    - "localhost"
+    path: "/grafana"
+
+kubeStateMetrics:
+  enabled: false
+
+nodeExporter:
+  enabled: false
+
+alertmanager:
+  enabled: false
